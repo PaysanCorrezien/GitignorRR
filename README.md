@@ -4,21 +4,23 @@
 
 Gitignorrr is your next favorite tool for managing .gitignore files. It's a powerful, dynamic, and user-friendly command-line application designed to simplify the process of generating and maintaining .gitignore files for all of your projects.
 
+![example usage](exemple.png)
+
 ## 🌠 Features
 
-- Dynamic Generation: Gitignorrr fetches the most recent .gitignore templates from the well-curated database at gitignore.io. This ensures that your .gitignore files are always up to date with the latest best practices.
+- Dynamic Generation: Gitignorrr fetches the most recent .gitignore templates from the well-curated database at gitignore.io.
  
-- Multiple Language Support: No need to create separate .gitignore files for each language in your project. Gitignorrr can handle multiple languages at once, providing comprehensive .gitignore files that are tailor-made for your multi-language projects.
+- Multiple Language Support: Gitignorrr can handle multiple languages at once, providing comprehensive .gitignore files that are tailor-made for your multi-language projects.
  
-- No Redundancies: If a language or platform is already listed in your .gitignore file, Gitignorrr will not add it again. It checks for existing entries before adding new ones, ensuring that your .gitignore files stay clean and uncluttered.
+- No Redundancies: If a language or platform is already listed in your .gitignore file, Gitignorrr will not add it again. 
  
-- Interactive Listing: With Gitignorrr, you can list all the languages and platforms currently covered in your .gitignore file with a simple command. It's a fast and easy way to see what's already being ignored in your projects.
+- Interactive Listing: With Gitignorrr, you can list all the languages and platforms currently covered in your .gitignore f
  
-- Fast Execution: Gitignorrr is built with performance in mind. It fetches, parses, and writes .gitignore templates swiftly, reducing waiting time and increasing productivity.
+- Fast Execution
  
-- Zsh Completion: For Zsh users, Gitignorrr offers command-line completion. This feature makes it even more convenient and efficient to use by providing auto-suggestions as you type.
+- Zsh Completion: For Zsh users, Gitignorrr offers command-line completion.
  
-- Easy Installation: With just a few simple commands, you can install Gitignorrr and start benefiting from its features immediately.
+- Easy Installation
 
 - Custom Template : You can modify the file `/usr/share/bin/Gitignorrr` to include your own custom template
 
@@ -32,7 +34,6 @@ Im using latest nerdfonts version 3.0 on my system so icons might not work with 
 It's calling gitignor.io to download the files so it obviously require internet access.
 
 ## ▶️  Installing
-
 
 To download `gitignorrr` to `/usr/local/bin`:
 
@@ -48,8 +49,6 @@ curl -o- https://raw.githubusercontent.com/PaysanCorrezien/GitignorRR/main/zshco
 ```
 
 Restart your shell or run `source ~/.zshrc` to refresh Zsh completion.
-
-
 
 You can check if Zsh completion was added successfully to `.zshrc` with this command:
 
@@ -67,7 +66,7 @@ echo $PATH | grep -q "/usr/local/bin" && echo "/usr/local/bin is in the PATH" ||
 
 Simple use `gitignorrr` and pass a list of program/ language with a space between them
 ```
-gitignorrr phpstorm obsidian denoSure
+gitignorrr phpstorm obsidian Linux
 ```
 If you install the autocompletion snippet just type the first letter and press <Tab> and if should autocomplete, if you have autocompletion for zsh enabled.
 
@@ -75,6 +74,7 @@ If you install the autocompletion snippet just type the first letter and press <
 
 - [ ] Show list of all languages available for gitignore (list from gitignore.io /api/list )
 - [ ] Cover errors
+- [ ] Improve Installation process
 
 ## 🆘 Help
 
