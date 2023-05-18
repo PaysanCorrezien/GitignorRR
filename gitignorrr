@@ -1,0 +1,164 @@
+#!/bin/bash
+
+# Improved creategitignore.sh script
+
+GITIGNORE_IO_API_URL="https://www.toptal.com/developers/gitignore/api"
+GITIGNORE_FILE=".gitignore"
+# If you want to use a personal template, can be null if not needed
+PERSONAL_GITIGNORE_TEMPLATE="$HOME/.config/git/personalgitignoretemplate"
+
+ASCII="
+         (_) | |   (_)                                             
+   __ _   _  | |_   _    __ _   _ __     ___    _ __   _ __   _ __ 
+  / _  | | | | __| | |  / _  | |  _ \   / _ \  | '__| | '__| | '__|
+ | (_| | | | | |_  | | | (_| | | | | | | (_) | | |    | |    | |   
+  \__, | |_|  \__| |_|  \__, | |_| |_|  \___/  |_|    |_|    |_|   
+   __/ |                 __/ |                                     
+  |___/                 |___/                                      
+"
+# ANSI color codes
+GREEN="\033[32m"
+RED="\033[31m"
+RESET="\033[0m"
+YELLOW="\033[33m"
+BOLD="\033[1m"
+CYAN="\033[36m"
+MAGENTA="\033[35m"
+
+# Nerd Font icons
+CHECKMARK="\uf058"
+CROSSMARK="\uf057"
+LIGHTNING="\uf0e7"
+POINTER_RIGHT="\uf3ed"
+MAGNIFY_GLASS="\uf002"
+HEART="\uf004"
+SHY="\uf180"
+
+# Capitalize the first letter of the language
+capitalize_first_letter() {
+	local input="$1"
+	echo "$(tr '[:lower:]' '[:upper:]' <<<"${input:0:1}")${input:1}"
+}
+
+# Download .gitignore content for a specific language
+download_gitignore() {
+	local lang="$1"
+	local url="${GITIGNORE_IO_API_URL}/${lang}"
+	local content
+	content=$(curl -fsSL "$url" | sed '/^$/d' | sed '/www.toptal.com/d')
+	if [ -n "$content" ]; then
+		echo "$content"
+	else
+		echo "Error: Unable to download .gitignore content for $lang" >&2
+	fi
+}
+
+# Check if the whole content block is present in the .gitignore file
+check_content() {
+	local content="$1"
+	local joined_content
+	local joined_gitignore
+	joined_content=$(echo "$content" | tr '\n' '\0' | sed 's/\x00//g')
+	# joined_gitignore=$(cat "$GITIGNORE_FILE" | tr '\n' '\0' | sed 's/\x00//g')
+	joined_gitignore=$(tr '\n' '\0' <"$GITIGNORE_FILE" | sed 's/\x00//g')
+	if [[ "$joined_gitignore" == *"$joined_content"* ]]; then
+		return 0
+	else
+		return 1
+	fi
+}
+
+# Append content to the .gitignore file if not already present
+append_to_gitignore() {
+	local content="$1"
+	local lang="$2"
+	echo -n -e "${MAGNIFY_GLASS} Checking if ${BOLD}$lang${RESET} is already in gitignore... "
+	check_content "$content"
+	local is_present=$?
+
+	if [[ "$is_present" -ne 0 ]]; then
+		echo -e "\n${GREEN}${CHECKMARK}${RESET} Adding ${BOLD}$lang${RESET} to .gitignore"
+		echo -e "\n$content" >>"$GITIGNORE_FILE"
+	else
+		echo -e "\n${RED}${CROSSMARK}${RESET} ${BOLD}$lang${RESET} is already in .gitignore"
+	fi
+}
+
+list_languages() {
+  if [ -f "$GITIGNORE_FILE" ]; then
+    grep -o '### .* ###' "$GITIGNORE_FILE" | sed 's/^### //; s/ ###$//' | while IFS= read -r lang; do
+      echo -e "${CYAN}${POINTER_RIGHT}${RESET} ${BOLD}$lang${RESET} ${GREEN}${CHECKMARK}${RESET}"
+    done
+  else
+    echo -e "${RED}${CROSSMARK}${RESET} No .gitignore file found in the current directory."
+  fi
+}
+
+# Check for -l or --list flag
+if [[ "$1" == "-l" || "$1" == "--list" ]]; then
+  list_languages
+  exit 0
+fi
+
+VERSION="O.1"
+
+print_help() {
+  echo "$ASCII"
+  echo -e "Usage: creategitignore [LANGUAGES]"
+  echo -e "  -l, --list           List the languages in the current .gitignore file"
+  echo -e "  -V, --version        Show the script version"
+  echo -e "  -h, --help           Show this help message"
+  echo -e "Examples:"
+  echo -e "  creategitignore python java"
+  echo -e "  creategitignore -l"
+  echo -e "  creategitignore --version"
+}
+
+# Check for flags
+case "$1" in
+  -l|--list)
+    list_languages
+    exit 0
+    ;;
+  -V|--version)
+    echo "creategitignore version $VERSION"
+    exit 0
+    ;;
+  -h|--help)
+    print_help
+    exit 0
+    ;;
+esac
+
+touch "$GITIGNORE_FILE"
+
+if [ -f "$PERSONAL_GITIGNORE_TEMPLATE" ]; then
+	content=$(cat "$PERSONAL_GITIGNORE_TEMPLATE")
+	append_to_gitignore "$content" "Personal template"
+fi
+
+START_TIME=$(date +%s%N)
+
+echo "$ASCII"
+echo -e "${CYAN}${POINTER_RIGHT}${RESET} Gitignore files will be downloaded from $GITIGNORE_IO_API_URL"
+echo -e "${MAGENTA}${HEART}${RESET} You can find more information on the API used at https://github.com/toptal/gitignore.io ${MAGENTA}${HEART}${RESET}"
+
+# Check if it's a Git repository
+if [ ! -d ".git" ]; then
+	echo -e "${CYAN}${SHY}${RESET} Initialise git first with git init"
+	exit 1
+fi
+
+for lang in "$@"; do
+	lang_capitalized=$(capitalize_first_letter "$lang")
+	content=$(download_gitignore "$lang_capitalized")
+	if [ -n "$content" ]; then
+		append_to_gitignore "$content" "$lang_capitalized"
+	fi
+done
+
+END_TIME=$(date +%s%N)
+ELAPSED_TIME=$((END_TIME - START_TIME))
+ELAPSED_TIME_MS=$((ELAPSED_TIME / 1000000))
+
+echo -e "${YELLOW}${LIGHTNING}${RESET} Execution time: ${ELAPSED_TIME_MS} ms"
