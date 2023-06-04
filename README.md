@@ -14,9 +14,7 @@ Gitignorrr is your next favorite tool for managing .gitignore files. It's a powe
  
 - No Redundancies: If a language or platform is already listed in your .gitignore file, Gitignorrr will not add it again. 
  
-- Interactive Listing: With Gitignorrr, you can list all the languages and platforms currently covered in your .gitignore f
- 
-- Fast Execution
+- Interactive Listing: With Gitignorrr, you can list all the languages and platforms currently covered in your .gitignore
  
 - Zsh Completion: For Zsh users, Gitignorrr offers command-line completion.
  
