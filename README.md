@@ -6,6 +6,10 @@ Gitignorrr is your next favorite tool for managing .gitignore files. It's a powe
 
 ![example usage](exemple.png)
 
+## 🚧 Work in progress
+
+It's not a stable project for now.
+
 ## 🌠 Features
 
 - Dynamic Generation: Gitignorrr fetches the most recent .gitignore templates from the well-curated database at gitignore.io.
@@ -62,17 +66,19 @@ echo $PATH | grep -q "/usr/local/bin" && echo "/usr/local/bin is in the PATH" ||
 
 ## 🚀 Executing program
 
-Simple use `gitignorrr` and pass a list of program/ language with a space between them
+Use `gitignorrr` and pass a list of program / language with a space between them
 ```
 gitignorrr phpstorm obsidian Linux
 ```
-If you install the autocompletion snippet just type the first letter and press <Tab> and if should autocomplete, if you have autocompletion for zsh enabled.
+If you install the autocompletion snippet just type the first letter and press Tab and if should autocomplete, if you have autocompletion for zsh enabled.
 
 ## 📆 ToDo
 
 - [ ] Show list of all languages available for gitignore (list from gitignore.io /api/list )
 - [ ] Cover errors
 - [ ] Improve Installation process
+- [ ] Find better way to manage completion and refresh of the list ( without function in zshrc )
+
 
 ## 🆘 Help
 
@@ -82,8 +88,7 @@ gitignorrr -h
 
 ## 🤺 Author
 
-Dylan Meunier
-ex. [@PaysanCorrezien](https://github.com/PaysanCorrezien)
+Dylan Meunier [@PaysanCorrezien](https://github.com/PaysanCorrezien)
 
 ## 💻 Version History
 
